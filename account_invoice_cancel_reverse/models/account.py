@@ -13,6 +13,8 @@ from openerp.exceptions import UserError
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
     
+    reverse_move_id = fields.Many2one('account.move', string='Reverse Journal Entry', readonly=True, copy=False)
+    
     @api.multi
     def action_cancel(self):
         moves = self.env['account.move']
@@ -24,11 +26,13 @@ class AccountInvoice(models.Model):
                 raise UserError(_('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
         # First, set the invoices as cancelled and detach the move ids
-        self.write({'state': 'cancel'})
         if moves:
             for move in moves:
                 rev_move_id = moves.reverse_moves()[0]
                 rev_move_line = move_obj.browse(rev_move_id).line_ids.filtered('account_id.reconcile')
                 move_line = move.line_ids.filtered('account_id.reconcile')
                 (rev_move_line + move_line).reconcile()
+            self.write({'state': 'cancel', 'reverse_move_id': rev_move_id})
+        else:
+            self.write({'state': 'cancel'})
         return True

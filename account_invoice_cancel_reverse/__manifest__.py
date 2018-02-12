@@ -8,6 +8,7 @@
     "category": "",
     "description" : """Reverse cancelled invoice instead of delete its journal entry""",
     'data': [
+        "views/account_view.xml",
     ],
     'demo':[     
     ],
