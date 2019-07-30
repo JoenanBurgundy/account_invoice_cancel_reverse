@@ -4,7 +4,8 @@
     "depends": [
         'account_cancel',
     ],
-    "author": "Joenan <joenannr@gmail.com>",
+    "author": "Arkana <info@arkana.co.id>",
+    "website": "https://arkana.co.id",
     "category": "",
     "description" : """Reverse cancelled invoice instead of delete its journal entry""",
     'data': [
